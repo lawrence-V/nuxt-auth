@@ -53,10 +53,6 @@ export default {
         password: this.password,
       };
 
-      const config = {
-        credentials: "include",
-      };
-
       await this.$axios
         .post("http://localhost:8200/api/login", userData, {
           withCredentials: true,

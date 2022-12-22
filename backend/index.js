@@ -6,18 +6,6 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 
-const { success, error } = require('consola')
-
-app.use(cookieParser())
-app.use(
-  cors({
-    credentials: true,
-    origin: ['http://localhost:3000', 'http://localhost:8080'],
-  })
-)
-app.use(express.json())
-const PORT = 8200
-
 // database Connection
 mongoose.set('strictQuery', true)
 mongoose
@@ -27,6 +15,19 @@ mongoose
   })
   .then(() => console.log('connected Database'))
   .catch((e) => console.log(e))
+
+const { success, error } = require('consola')
+
+app.use(cookieParser())
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000', 'http://localhost:8080'],
+  })
+)
+
+app.use(express.json())
+const PORT = 8200
 
 //Routes
 const routes = require('../backend/routes/routes')

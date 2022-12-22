@@ -5,14 +5,14 @@
       <v-toolbar-title>My Blog App</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <div v-if="!auth">
+      <div v-if="auth">
         <!-- <p>{{ loggedInUser.email }}</p> -->
+        <v-btn text @click="logout">Logout</v-btn>
+        <v-btn text to="#">Profile</v-btn>
+      </div>
+      <div v-else>
         <v-btn text to="/login">Login</v-btn>
         <v-btn text to="/register">Register</v-btn>
-      </div>
-      <div v-if="auth">
-        <v-btn text @click="logout">Logout</v-btn>
-        <v-btn text to="/profile">Profile</v-btn>
       </div>
 
       <v-btn
@@ -70,8 +70,7 @@ export default {
   data() {
     return {
       auth: false,
-      isLoggedIn: true,
-      user: "",
+
       clipped: false,
       drawer: false,
       fixed: false,
@@ -102,17 +101,25 @@ export default {
   mounted() {
     this.$nuxt.$on("auth", (auth) => {
       this.auth = auth;
-      console.log(auth);
     });
   },
 
   methods: {
     async logout() {
+      console.log("1");
+      // Send a request to the server to log the user out
       await this.$axios
         .post("http://localhost:8200/api/logout", {
           withCredentials: true,
         })
         .then((response) => {
+          console.log("2");
+          // Delete the JWT cookie
+          // this.$nuxt.$cookies.set("jwt", "", {
+          //   maxAge: 0,
+          // });
+
+          // Redirect the user to the login page
           this.$router.push("/login");
         })
         .catch((error) => {

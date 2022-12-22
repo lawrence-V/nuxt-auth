@@ -67,11 +67,15 @@ router.get('/user', async (req, res) => {
 })
 
 router.post('/logout', (req, res) => {
-  res.cookie('jwt', '', { maxAge: 0 })
+  try {
+    res.cookie('jwt', '', { maxAge: 0, sameSite: 'None' })
 
-  res.send({
-    message: 'success',
-  })
+    res.send({
+      message: 'success',
+    })
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 module.exports = router
