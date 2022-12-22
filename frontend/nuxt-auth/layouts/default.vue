@@ -5,12 +5,12 @@
       <v-toolbar-title>My Blog App</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <div v-if="isLoggedIn">
+      <div v-if="!auth">
         <!-- <p>{{ loggedInUser.email }}</p> -->
         <v-btn text to="/login">Login</v-btn>
         <v-btn text to="/register">Register</v-btn>
       </div>
-      <div v-else>
+      <div v-if="auth">
         <v-btn text @click="logout">Logout</v-btn>
         <v-btn text to="/profile">Profile</v-btn>
       </div>
@@ -66,12 +66,10 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
-  name: "DefaultLayout",
   data() {
     return {
+      auth: false,
       isLoggedIn: true,
       user: "",
       clipped: false,
@@ -100,35 +98,27 @@ export default {
       title: "Vuetify.js",
     };
   },
-  methods: {
-    async logout() {
-      try {
-        await this.$axios.post("http://localhost:8100/logout");
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    // async getData() {
-    //   try {
-    //     const data = await this.$axios.get("http://localhost:8100/login");
-    //     this.user = data.data.user;
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-  },
-  computed: {
-    ...mapGetters(["isAuthenticated", "loggedInUser"]),
+
+  mounted() {
+    this.$nuxt.$on("auth", (auth) => {
+      this.auth = auth;
+      console.log(auth);
+    });
   },
 
-  // async created() {
-  //   try {
-  //     const { data } = await this.$axios.get("http://localhost:8100/login");
-  //     this.isLoggedIn = true;
-  //     this.user = data;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // },
+  methods: {
+    async logout() {
+      await this.$axios
+        .post("http://localhost:8200/api/logout", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.$router.push("/login");
+        })
+        .catch((error) => {
+          this.error = error;
+        });
+    },
+  },
 };
 </script>

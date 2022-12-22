@@ -65,25 +65,25 @@ export default {
         password: this.password,
       };
 
-      //   await this.$axios
-      //     .post("http://localhost:8200/api/register", userData)
-      //     .then((response) => {
-      //       this.$router.push("/");
-      //     })
-      //     .catch((error) => {
-      //       this.error = error;
-      //     });
+      await this.$axios
+        .post("http://localhost:8200/api/register", userData)
+        .then((response) => {
+          this.$router.push("/login");
+        })
+        .catch((error) => {
+          this.error = error;
+        });
 
-      await fetch("http://localhost:8200/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: this.name,
-          email: this.email,
-          password: this.password,
-        }),
-      });
-      await this.$router.push("/login");
+      // await fetch("http://localhost:8200/api/register", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     name: this.name,
+      //     email: this.email,
+      //     password: this.password,
+      //   }),
+      // });
+      // await this.$router.push("/login");
     },
   },
 };

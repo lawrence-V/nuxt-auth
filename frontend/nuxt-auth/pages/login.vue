@@ -17,6 +17,7 @@
                 required
               ></v-text-field>
               <v-text-field
+                v-model="password"
                 id="password"
                 prepend-icon="mdi-lock"
                 name="password"
@@ -52,20 +53,31 @@ export default {
         password: this.password,
       };
 
-      //   const config = {
-      //     credentials: "include",
-      //   };
-
-      await fetch("http://localhost:8200/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const config = {
         credentials: "include",
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-        }),
-      });
-      await this.$router.push("/");
+      };
+
+      await this.$axios
+        .post("http://localhost:8200/api/login", userData, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          this.error = error;
+        });
+
+      // await fetch("http://localhost:8200/api/login", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   credentials: "include",
+      //   body: JSON.stringify({
+      //     email: this.email,
+      //     password: this.password,
+      //   }),
+      // });
+      // await this.$router.push("/");
     },
   },
 };
